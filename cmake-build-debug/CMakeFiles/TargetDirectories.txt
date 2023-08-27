@@ -1,0 +1,3 @@
+D:/Programs/Clion_Programs/M3508_PID/cmake-build-debug/CMakeFiles/M3508_PID.elf.dir
+D:/Programs/Clion_Programs/M3508_PID/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Programs/Clion_Programs/M3508_PID/cmake-build-debug/CMakeFiles/rebuild_cache.dir
