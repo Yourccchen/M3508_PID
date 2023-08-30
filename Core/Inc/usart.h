@@ -33,10 +33,6 @@ void usart_printf(const char *fmt,...);
 float Get_Data(void);
 void USART_PID_Adjust(uint8_t Motor_n);
 
-extern float kp_vofa;
-extern float ki_vofa;
-extern float kd_vofa;
-extern float target_vofa;
 
 /* USER CODE END Includes */
 

@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-#include "pid.h"
+#include "PID.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -29,10 +29,6 @@ uint8_t RxBuffer[1];//串口接收缓冲
 uint16_t RxLine = 0;//指令长度
 uint8_t DataBuff[200];//指令内容
 
-float kp_vofa=15;
-float ki_vofa=0;
-float kd_vofa=0;
-float target_vofa=90;
 
 /* USER CODE END 0 */
 
@@ -63,7 +59,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+    HAL_UART_Receive_IT(&huart1,(uint8_t *)RxBuffer,1);//开启串口1中断
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -237,6 +233,9 @@ void USART_PID_Adjust(uint8_t Motor_n)
         }
     }
 }
+
+
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
     if(UartHandle->Instance==USART1)//如果是串口1
@@ -246,6 +245,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
         if(RxBuffer[0]==0x21)            //接收结束标志位，可自行设置(!的十六进制为0x21)
         {
             for(int i=0;i<RxLine;i++)
+
                 USART_PID_Adjust(1);//参数赋值
 
             memset(DataBuff,0,sizeof(DataBuff));  //清空缓存数组

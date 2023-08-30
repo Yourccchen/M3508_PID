@@ -40,7 +40,7 @@ static void pid_param_init(
 {
     pid->id = id;
 
-    pid->ControlPeriod = period;
+    pid->ControlPeriod = period;             //没用到
     pid->DeadBand = deadband;
     pid->IntegralLimit = intergral_limit;
     pid->MaxOutput = maxout;
@@ -55,17 +55,29 @@ static void pid_param_init(
 }
 
 /*中途更改参数设定--------------------------------------------------------------*/
-static void pid_reset(PID_TypeDef * pid, float kp, float ki, float kd)
+static void pid_reset_kp(PID_TypeDef * pid, float kp)
 {
     pid->kp = kp;
+}
+
+static void pid_reset_ki(PID_TypeDef * pid, float ki)
+{
     pid->ki = ki;
+}
+
+static void pid_reset_kd(PID_TypeDef * pid, float kd)
+{
     pid->kd = kd;
 }
 
+static void pid_reset_target(PID_TypeDef * pid, float target)
+{
+    pid->target = target;
+}
 /*pid计算-----------------------------------------------------------------------*/
 
 
-static float pid_calculate(PID_TypeDef* pid, float measure)//, int16_t target)
+static float pid_calculate(PID_TypeDef* pid, float measure)
 {
 //	uint32_t time,lasttime;
 
@@ -73,7 +85,7 @@ static float pid_calculate(PID_TypeDef* pid, float measure)//, int16_t target)
     pid->thistime = HAL_GetTick();
     pid->dtime = pid->thistime-pid->lasttime;
     pid->measure = measure;
-    //	pid->target = target;
+//  pid->target = target;
 
     pid->last_err  = pid->err;
     pid->last_output = pid->output;
@@ -99,7 +111,7 @@ static float pid_calculate(PID_TypeDef* pid, float measure)//, int16_t target)
         pid->output = pid->pout + pid->iout + pid->dout;
 
 
-        //pid->output = pid->output*0.7f + pid->last_output*0.3f;  //滤波
+        //pid->output = pid->output*0.7f + pid->last_output*0.3f;  //滤波？
         if(pid->output>pid->MaxOutput)
         {
             pid->output = pid->MaxOutput;
@@ -119,7 +131,10 @@ static float pid_calculate(PID_TypeDef* pid, float measure)//, int16_t target)
 void pid_init(PID_TypeDef* pid)
 {
     pid->f_param_init = pid_param_init;
-    pid->f_pid_reset = pid_reset;
+    pid->f_pid_reset_kp = pid_reset_kp;
+    pid->f_pid_reset_ki = pid_reset_ki;
+    pid->f_pid_reset_kd = pid_reset_kd;
+    pid->f_pid_reset_target = pid_reset_target;
     pid->f_cal_pid = pid_calculate;
 }
 
@@ -127,7 +142,6 @@ PID_TypeDef motor_pid[4];
 
 int32_t set_angle[4] = {0};
 int32_t set_speed[4] = {0};
-
 /**
   *@breif      位置环
   *@param      none
@@ -150,9 +164,9 @@ void Pid_Pos(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
         motor_pid[i].f_cal_pid(&motor_pid[i],motor_CAN1[i].real_ecd);
     }
     RM_CAN1_Transmit( 	  motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
-                          motor_pid[1].output,
-                          motor_pid[2].output,
-                          motor_pid[3].output);
+                           motor_pid[1].output,
+                           motor_pid[2].output,
+                           motor_pid[3].output);
     HAL_Delay(10);      //PID控制频率100HZ
 }
 
@@ -178,10 +192,10 @@ void Pid_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
         motor_pid[i].f_cal_pid(&motor_pid[i],motor_CAN1[i].speed_rpm);
     }
     RM_CAN1_Transmit( 	  motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
-                          motor_pid[1].output,
-                          motor_pid[2].output,
-                          motor_pid[3].output
-                 );
+                           motor_pid[1].output,
+                           motor_pid[2].output,
+                           motor_pid[3].output
+    );
     HAL_Delay(10);      //PID控制频率100HZ
 }
 

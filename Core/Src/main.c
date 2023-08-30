@@ -59,6 +59,10 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+float kp_vofa=4;
+float ki_vofa=0;
+float kd_vofa=1;
+float target_vofa=360;
 
 /* USER CODE END 0 */
 
@@ -102,8 +106,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-      Pid_Pos(target_vofa,target_vofa,target_vofa,target_vofa);
-      usart_printf("%.0f,%.0f\r\n",target_vofa,motor_pid[3].measure);
+      Pid_Speed(target_vofa,target_vofa,target_vofa,target_vofa);
+      usart_printf("%.0f,%.0f,%.0f\r\n",target_vofa,motor_pid[0].measure,motor_pid[0].output);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

@@ -59,6 +59,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
+extern float kp_vofa;
+extern float ki_vofa;
+extern float kd_vofa;
+extern float target_vofa;
 
 /* USER CODE END Private defines */
 

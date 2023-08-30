@@ -66,7 +66,10 @@ typedef struct _PID_TypeDef
                          float ki,
                          float kd);
 
-    void (*f_pid_reset)(struct _PID_TypeDef *pid, float kp,float ki, float kd);		//pid三个参数修改
+    void (*f_pid_reset_kp)(struct _PID_TypeDef *pid, float kp);		//pid参数修改
+    void (*f_pid_reset_ki)(struct _PID_TypeDef *pid, float ki);
+    void (*f_pid_reset_kd)(struct _PID_TypeDef *pid, float kd);
+    void (*f_pid_reset_target)(struct _PID_TypeDef *pid, float target);
     float (*f_cal_pid)(struct _PID_TypeDef *pid, float measure);                    //pid计算
 }PID_TypeDef;
 
