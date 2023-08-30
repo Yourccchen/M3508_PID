@@ -5,20 +5,13 @@
 #ifndef M3508_PID_PID_H
 #define M3508_PID_PID_H
 /**
-  ******************************************************************************
   * @file	PID.h
   * @author
   * @brief
-  ******************************************************************************
-  * @attention
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
 
-#ifndef _PID_H
-#define _PID_H
 
 #include "stdint.h"
 
@@ -34,28 +27,28 @@ typedef struct _PID_TypeDef
 {
     PID_ID id;
 
-    float target;							//目标值
+    float target;					    //目标值
     float lastNoneZeroTarget;
     float kp;
     float ki;
     float kd;
 
-    float   measure;					//测量值
-    float   err;							//误差
-    float   last_err;      		//上次误差
+    float measure;					    //测量值
+    float err;					     	//误差
+    float last_err;      		        //上次误差
 
     float pout;
     float iout;
     float dout;
 
     float output;						//本次输出
-    float last_output;			//上次输出
+    float last_output;			        //上次输出
 
-    float MaxOutput;				//输出限幅
-    float IntegralLimit;		//积分限幅
-    float DeadBand;			  //死区（绝对值）
-    float ControlPeriod;		//控制周期
-    float  Max_Err;					//最大误差
+    float MaxOutput;				    //输出限幅
+    float IntegralLimit;		        //积分限幅
+    float DeadBand;			            //死区（绝对值）
+    float ControlPeriod;		        //控制周期
+    float  Max_Err;					    //最大误差
 
     uint32_t thistime;
     uint32_t lasttime;
@@ -81,11 +74,6 @@ void pid_init(PID_TypeDef* pid);
 void Pid_Pos(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 void Pid_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 
-
-
-#endif
-
-//extern PID_TypeDef pid_pitch;
 extern PID_TypeDef motor_pid[4];
 
 

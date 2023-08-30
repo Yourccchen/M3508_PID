@@ -102,7 +102,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+      Pid_Pos(target_vofa,target_vofa,target_vofa,target_vofa);
+      usart_printf("%.0f,%.0f\r\n",target_vofa,motor_pid[3].measure);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

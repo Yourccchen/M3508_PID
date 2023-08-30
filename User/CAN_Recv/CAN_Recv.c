@@ -42,7 +42,8 @@ void can_filter_init(void)
 
 
 //motor data read
-#define get_motor_measure(ptr, data)/* “ \ ” 为续行符，表示下面一行是紧接着当前行，\后不可含有任何符号，包括空格和空行，此处必须使用 */    	\
+// /* “ \ ” 为续行符，表示下面一行是紧接着当前行，\后不可含有任何符号，包括空格和空行，此处必须使用 */
+#define get_motor_measure(ptr, data)    	\
     {                                                                   \
         (ptr)->ecd = (uint16_t)((data)[0] << 8 | (data)[1]);            \
 	if(k)															\
@@ -126,12 +127,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         }
 
     }
-
-
+//    __HAL_CAN_ENABLE_IT(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+//    __HAL_CAN_ENABLE_IT(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 }
-
-
-
 
 /**
   * @brief          发送ID为0x700的CAN包,它会设置3508电机进入快速设置ID
@@ -159,14 +157,6 @@ void CAN_cmd_chassis_reset_ID(void)
 
 
 /**
-  * @brief          send control current of motor (0x201, 0x202, 0x203, 0x204)
-  * @param[in]      motor1: (0x201) 3508 motor control current, range [-16384,16384]
-  * @param[in]      motor2: (0x202) 3508 motor control current, range [-16384,16384]
-  * @param[in]      motor3: (0x203) 3508 motor control current, range [-16384,16384]
-  * @param[in]      motor4: (0x204) 3508 motor control current, range [-16384,16384]
-  * @retval         none
-  */
-/**
   * @brief          发送电机控制电流(0x201,0x202,0x203,0x204)
   * @param[in]      motor1: (0x201) 3508电机控制电流, 范围 [-16384,16384]
   * @param[in]      motor2: (0x202) 3508电机控制电流, 范围 [-16384,16384]
@@ -174,7 +164,7 @@ void CAN_cmd_chassis_reset_ID(void)
   * @param[in]      motor4: (0x204) 3508电机控制电流, 范围 [-16384,16384]
   * @retval         none
   */
-void RM_CAN1_FIRST(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
+void RM_CAN1_Transmit(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
 {
     uint32_t send_mail_box;
     chassis_tx_message.StdId = CAN_3508_ALL_ID;
@@ -194,7 +184,7 @@ void RM_CAN1_FIRST(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor
 }
 
 
-void RM_CAN2_FIRST(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
+void RM_CAN2_Transmit(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
 {
     uint32_t send_mail_box;
     gimbal_tx_message.StdId = CAN_3508_ALL_ID;
@@ -212,9 +202,3 @@ void RM_CAN2_FIRST(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor
 
     HAL_CAN_AddTxMessage(&GIMBAL_CAN, &gimbal_tx_message, gimbal_can_send_data, &send_mail_box);
 }
-
-
-
-
-
-

@@ -20,8 +20,8 @@
 
 #define ABS(x)		((x>0)? x: -x)
 
-PID_TypeDef pid_pitch,pid_pithch_speed,pid_roll,pid_roll_speed,pid_yaw_speed;
-extern int isMove;
+//PID_TypeDef pid_pitch,pid_pithch_speed,pid_roll,pid_roll_speed,pid_yaw_speed;
+
 
 /*参数初始化--------------------------------------------------------------*/
 static void pid_param_init(
@@ -40,7 +40,7 @@ static void pid_param_init(
 {
     pid->id = id;
 
-    pid->ControlPeriod = period;             //没用到
+    pid->ControlPeriod = period;
     pid->DeadBand = deadband;
     pid->IntegralLimit = intergral_limit;
     pid->MaxOutput = maxout;
@@ -149,7 +149,7 @@ void Pid_Pos(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
         motor_pid[i].target = set_angle[i];
         motor_pid[i].f_cal_pid(&motor_pid[i],motor_CAN1[i].real_ecd);
     }
-    RM_CAN1_FIRST( 		motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
+    RM_CAN1_Transmit( 	  motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
                           motor_pid[1].output,
                           motor_pid[2].output,
                           motor_pid[3].output);
@@ -177,10 +177,11 @@ void Pid_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
         motor_pid[i].target = set_speed[i];
         motor_pid[i].f_cal_pid(&motor_pid[i],motor_CAN1[i].speed_rpm);
     }
-    RM_CAN1_FIRST( 		motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
+    RM_CAN1_Transmit( 	  motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
                           motor_pid[1].output,
                           motor_pid[2].output,
-                          motor_pid[3].output);
+                          motor_pid[3].output
+                 );
     HAL_Delay(10);      //PID控制频率100HZ
 }
 

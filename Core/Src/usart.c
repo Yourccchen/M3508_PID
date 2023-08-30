@@ -29,7 +29,7 @@ uint8_t RxBuffer[1];//串口接收缓冲
 uint16_t RxLine = 0;//指令长度
 uint8_t DataBuff[200];//指令内容
 
-float kp_vofa=0;
+float kp_vofa=15;
 float ki_vofa=0;
 float kd_vofa=0;
 float target_vofa=90;
@@ -237,9 +237,6 @@ void USART_PID_Adjust(uint8_t Motor_n)
         }
     }
 }
-
-
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
     if(UartHandle->Instance==USART1)//如果是串口1
