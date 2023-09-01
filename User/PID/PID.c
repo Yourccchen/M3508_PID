@@ -17,7 +17,7 @@
 #include "usart.h"
 #include "CAN_Recv.h"
 #include "stm32f4xx.h"
-
+#include "ADRC.h"
 #define ABS(x)		((x>0)? x: -x)
 
 //PID_TypeDef pid_pitch,pid_pithch_speed,pid_roll,pid_roll_speed,pid_yaw_speed;
@@ -198,5 +198,32 @@ void Pid_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
     );
     HAL_Delay(10);      //PID控制频率100HZ
 }
-
+/**
+  *@breif      ADRC速度环
+  *@param      电机转速
+  *@retval     none
+  */
+void ADRC_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
+{
+    for(int i=0; i<4; i++)
+    {
+        pid_init(&motor_pid[i]);
+        motor_pid[i].f_param_init(&motor_pid[i],PID_Speed,16383,5000,10,0,8000,target_vofa, kp_vofa ,ki_vofa ,kd_vofa);
+    }
+    set_speed[0] = motor1;
+    set_speed[1] = motor2;
+    set_speed[2] = motor3;
+    set_speed[3] = motor4;
+    for(int i=0; i<4; i++)
+    {
+        motor_pid[i].target = set_speed[i];
+        motor_pid[i].output = LADRC_Cal(ADRC_Ctrl,motor1,motor_CAN1[i].speed_rpm);
+    }
+    RM_CAN1_Transmit( 	   motor_pid[0].output,   //将PID的计算结果通过CAN发送到电机
+                            motor_pid[1].output,
+                            motor_pid[2].output,
+                            motor_pid[3].output
+    );
+    HAL_Delay(10);      //PID控制频率100HZ
+}
 

@@ -76,6 +76,7 @@ typedef struct _PID_TypeDef
 void pid_init(PID_TypeDef* pid);
 void Pid_Pos(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 void Pid_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+void ADRC_Speed(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 
 extern PID_TypeDef motor_pid[4];
 

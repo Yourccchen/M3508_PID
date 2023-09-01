@@ -27,7 +27,7 @@
 
 #include "PID.h"
 #include "CAN_Recv.h"
-
+#include "ADRC.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,13 +99,17 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
     can_filter_init();
-  /* USER CODE END 2 */
+    setCtrlParm(&ADRC_Ctrl,80,320,15,0.2);
+    setClampParm(&ADRC_Ctrl,16383,-16383);
+
+    /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
+//      ADRC_Speed(target_vofa,target_vofa,target_vofa,target_vofa);
       Pid_Speed(target_vofa,target_vofa,target_vofa,target_vofa);
       usart_printf("%.0f,%.0f,%.0f\r\n",target_vofa,motor_pid[0].measure,motor_pid[0].output);
     /* USER CODE BEGIN 3 */
